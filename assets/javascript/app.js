@@ -18,8 +18,12 @@ var config = {
 
     let newTrain = $("#form-train-name").val().trim()
     let newDest = $("#form-destination").val().trim()
-    let newTime = $("#form-train-time").val().trim()
+    let newTime = moment($("#form-train-time").val().trim(), "HH:mm").format("HH:mm")
     let newFreq = $("#form-frequency").val().trim()
+    let minAway = moment(newTime, "HH:mm").add(moment(newFreq, "mm")).format("mm")
+    //
+    
+    console.log(minAway,"minAway")
 
     newEntry = {
         train : newTrain,
@@ -27,8 +31,13 @@ var config = {
         time : newTime,
         frequency : newFreq
     }
-
-    database.ref().push(newEntry)
+    if (newTrain && newDest && newTime && newFreq !== ''){
+        database.ref().push(newEntry)  
+    }else{
+       
+        alert("You must fill in all fields")
+    }
+    
 
     $("#form-train-name").val("");
     $("#form-destination").val("");
@@ -43,16 +52,17 @@ var config = {
       let trainTime = snapshot.val().time
       let trainFreq = snapshot.val().frequency
 
+
     
       let addRow = $("<tr>").append(
           $("<td>").text(trainName),
           $("<td>").text(trainDest),
           $("<td>").text(trainTime),
-          $("<td>").text(trainFreq)
+          $("<td>").text(trainFreq),
       )
     
       $("tbody").append(addRow)
 
 
 
-    })
+    });
